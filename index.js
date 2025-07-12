@@ -50,7 +50,7 @@ client.on('messageCreate', async message => {
   if (!inventory[userId]) inventory[userId] = [];
 
   // Admin Commands
-  if (command === 'adddc') {
+  if (command === 'givedc') {
     if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator))
       return message.reply('❌ You need to be an admin to use this command.');
     const target = message.mentions.users.first();
@@ -85,6 +85,37 @@ client.on('messageCreate', async message => {
   }
 
   // User Commands
+  if (command === 'help') {
+  const embed = new EmbedBuilder()
+    .setTitle('📖 DarkBot Help Menu')
+    .setColor('Purple')
+    .addFields(
+      {
+        name: '📦 Economy',
+        value: '`!daily`, `!dc`, `!shop`, `!buy <item>`, `!inv`, `!jackpot`',
+      },
+      {
+        name: '🐣 Pets & Eggs',
+        value: '`!eshop`, `!buyegg <rarity>`',
+      },
+      {
+        name: '🏆 Leaderboard',
+        value: '`!lb`',
+      },
+      {
+        name: '⚙️ Admin Only',
+        value: '`!givedc @user <amount>`, `!setstock`, `!giveinfcd @user`, `!removeinfcd @user`',
+      },
+      {
+        name: '📝 Admin Misc',
+        value: '`!updatelog <text>`',
+      }
+    )
+    .setFooter({ text: 'Use ! before each command. Example: !buy nigga' });
+
+  return message.channel.send({ embeds: [embed] });
+}
+
   if (command === 'dc') {
     return message.reply(`💰 You have **${dcData[userId]} DC**.`);
   }
