@@ -1,6 +1,7 @@
 const { Client, GatewayIntentBits, EmbedBuilder, PermissionsBitField } = require('discord.js');
 const express = require('express');
 const fs = require('fs');
+require('dotenv').config();
 
 const app = express();
 app.get("/", (req, res) => res.send("🤖 Bot is alive!"));
@@ -11,7 +12,8 @@ const client = new Client({
 });
 
 const PREFIX = '!';
-const TOKEN = process.env.DISCORD_TOKEN;
+const TOKEN = process.env.TOKEN;
+
 const MAX_DC = Infinity;
 
 let dcData = {};
@@ -31,6 +33,8 @@ function saveData() {
   fs.writeFileSync('inventory.json', JSON.stringify(inventory, null, 2));
   fs.writeFileSync('cooldowns.json', JSON.stringify(cooldowns, null, 2));
 }
+console.log("TOKEN:", process.env.TOKEN);
+console.log("Loaded Token:", TOKEN.slice(0, 10) + "...");
 
 client.on('ready', () => {
   console.log(`✅ Logged in as ${client.user.tag}`);
