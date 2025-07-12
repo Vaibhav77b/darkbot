@@ -1,0 +1,37 @@
+[
+  {
+    "rarity": "Common egg",
+    "pets": [
+      "Dark Dog - increases punch speed by 0.5x",
+      "Dark Cat - every 5 mins emits an aura that boosts your speed"
+    ]
+  },
+  {
+    "rarity": "Uncommon egg",
+    "pets": [
+      "Eclipse Frog - slows enemies every 10 mins",
+      "Eclipse Butterfly - steals 3% DE with 11% double chance"
+    ]
+  },
+  {
+    "rarity": "Rare egg",
+    "pets": [
+      "Candy Cow - boosts punch & speed by 1.5x",
+      "Ballistic Bull - slows enemies with DE by 0.5x"
+    ]
+  },
+  {
+    "rarity": "Legendary egg",
+    "pets": [
+      "Carnatic Mouse - shields you from getting dined for 1min",
+      "Chill Mammoth - reduces pet cooldown by 2 mins"
+    ]
+  },
+  {
+    "rarity": "Mythics egg",
+    "pets": [
+      "Chronicle Monkey - copies random pet ability",
+      "Chronicle Moth - skips benches for 1 min"
+    ]
+  }
+]
