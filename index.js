@@ -30,6 +30,10 @@ if (fs.existsSync('debtors.json')) {
 function saveDebtors() {
   fs.writeFileSync('debtors.json', JSON.stringify(debtors, null, 2));
 }
+let debtData = {};
+if (fs.existsSync('debt.json')) {
+  debtData = JSON.parse(fs.readFileSync('debt.json'));
+}
 
 if (fs.existsSync('data.json')) dcData = JSON.parse(fs.readFileSync('data.json'));
 if (fs.existsSync('cooldowns.json')) cooldowns = JSON.parse(fs.readFileSync('cooldowns.json'));
@@ -39,6 +43,7 @@ function saveData() {
   fs.writeFileSync('data.json', JSON.stringify(dcData, null, 2));
   fs.writeFileSync('inventory.json', JSON.stringify(inventory, null, 2));
   fs.writeFileSync('cooldowns.json', JSON.stringify(cooldowns, null, 2));
+  fs.writeFileSync('debt.json', JSON.stringify(debtData, null, 2));
 }
 console.log("TOKEN:", process.env.TOKEN);
 console.log("Loaded Token:", TOKEN.slice(0, 10) + "...");
@@ -184,7 +189,7 @@ client.on('messageCreate', async message => {
     .addFields(
       {
         name: '📦 Economy',
-        value: '`!daily`, `!dc`, `!shop`, `!buy <item>`, `!inv`, `!jackpot`',
+        value: '`!daily`, `!dc`, `!shop`, `!buy <item>`, `!inv`, `!jackpot`,`!paydebt`',
       },
       {
         name: '🐣 Pets & Eggs',
@@ -200,7 +205,7 @@ client.on('messageCreate', async message => {
       },
       {
         name: '📝 Admin Misc',
-        value: '`!updatelog <text>`',
+        value: '`!update <text>`',
       }
     )
     .setFooter({ text: 'Use ! before each command. Example: !buy nigga' });
@@ -236,13 +241,36 @@ client.on('messageCreate', async message => {
     const item = shop.find(i => i.name.toLowerCase() === itemName);
     if (!item) return message.reply('❌ Item not found.');
     if (item.stock <= 0) return message.reply('❌ Item is out of stock.');
-    if (dcData[userId] < item.price) return message.reply('❌ Not enough DC.');
-    dcData[userId] -= item.price;
-    inventory[userId].push(item.name);
-    item.stock--;
-    saveData();
+     if (dcData[userId] < item.price) return message.reply('❌ Not enough DC.');
+      dcData[userId] -= item.price;
+      inventory[userId].push(item.name);
+      item.stock--;
+      saveData();
     return message.reply(`✅ Bought **${item.name}**!`);
   }
+  if (command === 'paydebt') {
+  const userDebt = debtData[userId] || 0;
+  const amount = parseInt(args[0]);
+
+  if (userDebt <= 0) return message.reply('✅ You have no debt to pay.');
+
+  if (isNaN(amount) || amount <= 0) return message.reply('Usage: !paydebt amount');
+
+  if (dcData[userId] < amount) return message.reply('❌ You don\'t have enough DC to pay this amount.');
+
+  const payAmount = Math.min(amount, userDebt);
+  dcData[userId] -= payAmount;
+  debtData[userId] -= payAmount;
+
+  if (debtData[userId] <= 0) {
+    delete debtData[userId];
+    saveData();
+    return message.reply(`✅ You paid **${payAmount} DC** and cleared all your debt!`);
+  } else {
+    saveData();
+    return message.reply(`✅ You paid **${payAmount} DC**. Remaining debt: **${debtData[userId]} DC**`);
+  }
+}
 
   if (command === 'inv') {
     const items = inventory[userId];
