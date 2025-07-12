@@ -1,6 +1,7 @@
 const { Client, GatewayIntentBits, EmbedBuilder, PermissionsBitField } = require('discord.js');
 const express = require('express');
 const fs = require('fs');
+const debtIntervals = {}; // userId -> setInterval ID
 
 const app = express();
 app.get("/", (req, res) => res.send("🤖 Bot is alive!"));
@@ -22,6 +23,13 @@ let shop = require('./shop.json');
 let eggs = require('./eggshop.json');
 let pendingTrades = {};
 let infiniteCooldownUsers = new Set();
+let debtors = {};
+if (fs.existsSync('debtors.json')) {
+  debtors = JSON.parse(fs.readFileSync('debtors.json'));
+}
+function saveDebtors() {
+  fs.writeFileSync('debtors.json', JSON.stringify(debtors, null, 2));
+}
 
 if (fs.existsSync('data.json')) dcData = JSON.parse(fs.readFileSync('data.json'));
 if (fs.existsSync('cooldowns.json')) cooldowns = JSON.parse(fs.readFileSync('cooldowns.json'));
@@ -38,6 +46,50 @@ console.log("Loaded Token:", TOKEN.slice(0, 10) + "...");
 client.on('ready', () => {
   console.log(`✅ Logged in as ${client.user.tag}`);
 });
+setInterval(() => {
+  const now = Date.now();
+  for (const [userId, data] of Object.entries(debtors)) {
+    if (now >= data.endTime && !data.timeoutSet) {
+      const guild = client.guilds.cache.first();
+      const member = guild?.members.cache.get(userId);
+      if (member) {
+        member.timeout(24 * 60 * 60 * 1000, 'Failed to repay 1T debt on time');
+        console.log(`⏱️ Timed out ${member.user.tag} for 1 day due to unpaid debt.`);
+      }
+      debtors[userId].timeoutSet = true;
+      saveDebtors();
+    }
+  }
+}, 15000);
+function startDebtCountdownDM(user, durationMinutes, userId) {
+  let timeLeft = durationMinutes * 60;
+
+  user.send(`💸 You’ve been fined **1T DC**. You must repay within **${durationMinutes} minutes**, or you’ll be timed out.`)
+    .then(async msg => {
+      const interval = setInterval(() => {
+        if (!debtors[userId]) {
+          clearInterval(interval);
+          return;
+        }
+
+        if (timeLeft <= 0) {
+          clearInterval(interval);
+          user.send('⏱️ **Time’s up!** You will now be timed out.');
+          return;
+        }
+
+        const mins = Math.floor(timeLeft / 60);
+        const secs = timeLeft % 60;
+        msg.edit(`⏳ Time left to repay: **${mins}m ${secs}s**`);
+        timeLeft--;
+      }, 1000); // every second
+
+      debtIntervals[userId] = interval; // 👈 save interval
+    })
+    .catch(err => {
+      console.log(`Could not DM ${user.username}: ${err.message}`);
+    });
+}
 
 client.on('messageCreate', async message => {
   if (message.author.bot || !message.content.startsWith(PREFIX)) return;
@@ -60,6 +112,46 @@ client.on('messageCreate', async message => {
     saveData();
     return channel.send(`✅ Gave ${amount} DC to ${target.tag}.`);
   }
+  if (command === 'debt') {
+  if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) return;
+
+  const target = message.mentions.users.first();
+  const duration = parseInt(args[1]);
+
+  if (!target || isNaN(duration)) return message.reply('Usage: !debt @user <minutes>');
+
+  const userId = target.id;
+  dcData[userId] = (dcData[userId] || 0) - 1_000_000_000_000;
+  const endTime = Date.now() + duration * 60 * 1000;
+
+  debtors[userId] = { endTime, timeoutSet: false };
+  saveData();
+  saveDebtors();
+
+  message.reply(`💸 ${target.username} fined **1T DC**. Countdown started.`);
+
+  startDebtCountdownDM(target, duration, userId); // 👈 live DM timer
+}
+  if (command === 'redebt') {
+  if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) return;
+
+  const target = message.mentions.users.first();
+  if (!target) return message.reply('Usage: !redebt @user');
+
+  const userId = target.id;
+
+  if (debtors[userId]) {
+    delete debtors[userId];
+    if (debtIntervals[userId]) {
+      clearInterval(debtIntervals[userId]);
+      delete debtIntervals[userId];
+    }
+    saveDebtors();
+    return message.reply(`✅ Cleared debt and stopped countdown for ${target.username}.`);
+  } else {
+    return message.reply(`❌ ${target.username} has no active debt.`);
+  }
+}
 
   if (command === 'setstock') {
     if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) return;
@@ -67,7 +159,7 @@ client.on('messageCreate', async message => {
     fs.writeFileSync('shop.json', JSON.stringify(shop, null, 2));
     return message.reply('🛒 Shop stock updated!');
   }
-
+  
   if (command === 'giveinfcd') {
     if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) return;
     const target = message.mentions.users.first();
@@ -85,7 +177,7 @@ client.on('messageCreate', async message => {
   }
 
   // User Commands
-  if (command === 'help') {
+  if (command === 'dhelp') {
   const embed = new EmbedBuilder()
     .setTitle('📖 DarkBot Help Menu')
     .setColor('Purple')
@@ -104,8 +196,8 @@ client.on('messageCreate', async message => {
       },
       {
         name: '⚙️ Admin Only',
-        value: '`!givedc @user <amount>`, `!setstock`, `!giveinfcd @user`, `!removeinfcd @user`',
-      },
+        value: '`!givedc @user <amount>`, `!setstock`, `!giveinfcd @user`, `!removeinfcd @user`,`!debt @user <minutes given to fill fine>`,`!redebt @user`',
+      }
       {
         name: '📝 Admin Misc',
         value: '`!updatelog <text>`',
