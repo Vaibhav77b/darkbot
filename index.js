@@ -197,7 +197,7 @@ client.on('messageCreate', async message => {
       {
         name: '⚙️ Admin Only',
         value: '`!givedc @user <amount>`, `!setstock`, `!giveinfcd @user`, `!removeinfcd @user`,`!debt @user <minutes given to fill fine>`,`!redebt @user`',
-      }
+      },
       {
         name: '📝 Admin Misc',
         value: '`!updatelog <text>`',
