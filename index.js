@@ -73,7 +73,7 @@ client.on('messageCreate', async message => {
     const target = message.mentions.users.first();
     if (!target) return message.reply('Mention a user to give infinite cooldown.');
     infiniteCooldownUsers.add(target.id);
-    return message.reply(`♾️ ${target.username} can now use daily infinitely.`);
+    return message.reply(`♾️ ${target.username} can no longer use his abilities forever in the world .`);
   }
 
   if (command === 'removeinfcd') {
@@ -81,7 +81,7 @@ client.on('messageCreate', async message => {
     const target = message.mentions.users.first();
     if (!target) return message.reply('Mention a user to remove infinite cooldown.');
     infiniteCooldownUsers.delete(target.id);
-    return message.reply(`❌ ${target.username} cooldown restored.`);
+    return message.reply(`❌ ${target.username} damn,you got spared lmfao dumbass.`);
   }
 
   // User Commands
@@ -121,7 +121,7 @@ client.on('messageCreate', async message => {
     return message.reply(`✅ Bought **${item.name}**!`);
   }
 
-  if (command === 'inventory') {
+  if (command === 'inv') {
     const items = inventory[userId];
     if (!items.length) return message.reply('🎒 Your inventory is empty.');
     const counts = items.reduce((a, b) => { a[b] = (a[b] || 0) + 1; return a; }, {});
@@ -147,7 +147,7 @@ client.on('messageCreate', async message => {
     }
   }
 
-  if (command === 'eggshop') {
+  if (command === 'eshop') {
     const embed = new EmbedBuilder().setTitle('🥚 Egg Shop').setColor('Yellow');
     eggs.forEach((egg, index) => {
       embed.addFields({ name: `${index + 1}. ${egg.rarity}`, value: egg.pets.join(", ") });
@@ -169,7 +169,7 @@ client.on('messageCreate', async message => {
     return message.reply(`🥚 You hatched a **${pet}** from ${egg.rarity}!`);
   }
 
-  if (command === 'updatelog') {
+  if (command === 'update') {
     const log = args.join(" ");
     if (!log) return message.reply('Please include update log.');
     const embed = new EmbedBuilder().setTitle('📝 Update Log').setDescription(log).setColor('Orange');
