@@ -1,7 +1,6 @@
 const { Client, GatewayIntentBits, EmbedBuilder, PermissionsBitField } = require('discord.js');
 const express = require('express');
 const fs = require('fs');
-require('dotenv').config();
 
 const app = express();
 app.get("/", (req, res) => res.send("🤖 Bot is alive!"));
