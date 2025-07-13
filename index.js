@@ -17,7 +17,7 @@ const client = new Client({
 });
 
 const PREFIX = '!';
-const TOKEN = process.env.DISCORD_TOKEN;
+const TOKEN = process.env.TOKEN;
 const MONGO_URI = process.env.MONGO_URI;
 
 mongoose.connect(MONGO_URI, {
