@@ -2,6 +2,16 @@ const { Client, GatewayIntentBits, EmbedBuilder, PermissionsBitField } = require
 const express = require('express');
 const fs = require('fs');
 const debtIntervals = {}; // userId -> setInterval ID
+const mongoose = require('mongoose');
+
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
+  console.log('✅ MongoDB connected!');
+}).catch(err => {
+  console.error('❌ MongoDB connection error:', err);
+});
 
 const app = express();
 app.get("/", (req, res) => res.send("🤖 Bot is alive!"));
