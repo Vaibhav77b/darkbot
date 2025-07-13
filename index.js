@@ -115,7 +115,12 @@ client.on('messageCreate', async message => {
   const userId = message.author.id;
   const channel = message.channel;
 
-  if (!dcData[userId]) dcData[userId] = 0;
+  let user = await User.findOne({ userId });
+if (!user) {
+  user = new User({ userId });
+  await user.save();
+}
+
   if (!inventory[userId]) inventory[userId] = [];
 
   // Admin Commands
@@ -234,10 +239,11 @@ client.on('messageCreate', async message => {
     const last = cooldowns[userId]?.daily || 0;
     if (!infiniteCooldownUsers.has(userId) && now - last < 86400000)
       return message.reply('⏳ You already claimed your daily DC. Try again later.');
-    dcData[userId] += 5000;
+    user.dc += 50000;
+await user.save();
     cooldowns[userId] = { ...cooldowns[userId], daily: now };
     saveData();
-    return message.reply('✅ You claimed **5,000 DC** from daily!');
+    return message.reply('✅ You claimed **50,000 DC** from daily!');
   }
 
   if (command === 'shop') {
