@@ -330,6 +330,25 @@ client.on('messageCreate', async message => {
     saveData();
     return message.reply(`🥚 You hatched a **${pet}** from ${egg.rarity}!`);
   }
+  if (command === 'mypets') {
+  const userItems = inventory[userId] || [];
+  const petList = userItems.filter(item => allPets.includes(item));
+
+  if (petList.length === 0) return message.reply('🐾 You don’t have any pets yet!');
+
+  const petCounts = {};
+  petList.forEach(pet => petCounts[pet] = (petCounts[pet] || 0) + 1);
+
+  const embed = new EmbedBuilder()
+    .setTitle(`🐾 ${message.author.username}'s Pets`)
+    .setColor('Purple');
+
+  for (const [pet, count] of Object.entries(petCounts)) {
+    embed.addFields({ name: pet, value: `x${count}` });
+  }
+
+  return message.channel.send({ embeds: [embed] });
+}
 
   if (command === 'update') {
     const log = args.join(" ");
