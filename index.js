@@ -38,6 +38,7 @@ if (fs.existsSync('debt.json')) {
 if (fs.existsSync('data.json')) dcData = JSON.parse(fs.readFileSync('data.json'));
 if (fs.existsSync('cooldowns.json')) cooldowns = JSON.parse(fs.readFileSync('cooldowns.json'));
 if (fs.existsSync('inventory.json')) inventory = JSON.parse(fs.readFileSync('inventory.json'));
+if (fs.existsSync('debt.json')) debtData = JSON.parse(fs.readFileSync('debt.json'));
 
 function saveData() {
   fs.writeFileSync('data.json', JSON.stringify(dcData, null, 2));
