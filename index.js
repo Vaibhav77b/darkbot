@@ -31,6 +31,7 @@ let cooldowns = {};
 let inventory = {};
 let shop = require('./shop.json');
 let eggs = require('./eggshop.json');
+const allPets = eggs.flatMap(e => e.pets);
 let pendingTrades = {};
 let infiniteCooldownUsers = new Set();
 let debtors = {};
