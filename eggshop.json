@@ -1,3 +1,4 @@
+const allPets = eggs.flatMap(e => e.pets);
 [
   {
     "rarity": "Common egg",
