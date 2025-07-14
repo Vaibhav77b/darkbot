@@ -42,6 +42,28 @@ const eggs = require('./eggshop.json');
 client.on('ready', () => {
   console.log(`✅ Logged in as ${client.user.tag}`);
 });
+setInterval(async () => {
+  const users = await User.find({ 'debt.active': true });
+  const now = Date.now();
+
+  for (const user of users) {
+    if (user.debt.endTime <= now) {
+      const guild = client.guilds.cache.first(); // or find a specific guild
+      const member = await guild.members.fetch(user.userId).catch(() => null);
+
+      if (member && !member.isCommunicationDisabled()) {
+        await member.timeout(24 * 60 * 60 * 1000, 'Did not repay debt on time');
+        const targetUser = await client.users.fetch(user.userId).catch(() => null);
+        if (targetUser) {
+          await targetUser.send("⏳ You failed to repay your **1T DC** debt in time. You’ve been timed out for **1 day**.");
+        }
+      }
+
+      user.debt.active = false;
+      await user.save();
+    }
+  }
+}, 5000); // Check every 5 seconds
 
 client.on('messageCreate', async message => {
   if (message.author.bot || !message.content.startsWith(PREFIX)) return;
