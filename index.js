@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 const fs = require('fs');
 require('dotenv').config();
+const User = require('./models/User');
 
 const app = express();
 app.get("/", (req, res) => res.send("🤖 Bot is alive!"));
@@ -56,7 +57,7 @@ client.on('messageCreate', async message => {
     await user.save();
   }
 
-  if (command === 'gdc') {
+  if (command === 'givedc') {
     if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator))
       return message.reply('❌ You need to be an admin to use this command.');
     const target = message.mentions.users.first();
@@ -160,6 +161,22 @@ client.on('messageCreate', async message => {
     const embed = new EmbedBuilder().setTitle('📝 Update Log').setDescription(log).setColor('Orange');
     return channel.send({ embeds: [embed] });
   }
+  if (command === 'help') {
+  const embed = new EmbedBuilder()
+    .setTitle('🛠️ Bot Commands')
+    .setColor('Blurple')
+    .setDescription('Here are the available commands:')
+    .addFields(
+      { name: '💰 Economy', value: '`!dc`, `!daily`, `!paydebt`, `!lb`' },
+      { name: '🛒 Shop', value: '`!shop`, `!buy item`, `!inv`, `!jackpot`' },
+      { name: '🥚 Eggs & Pets', value: '`!eggshop`, `!buyegg rarity(for dumbasses like abhi,its common egg)`, `!mypets`' },
+      { name: '⚙️ Admin Only', value: '`!givedc`, `!setstock`, `!giveinfcd`, `!removeinfcd`, `!debt`, `!redebt`' },
+      { name: '📜 Other', value: '`!log`' }
+    )
+    .setFooter({ text: 'Use commands with ! prefix' });
+
+  return message.channel.send({ embeds: [embed] });
+}
 
   if (command === 'lb') {
     const users = await User.find({}).sort({ dc: -1 }).limit(10);
