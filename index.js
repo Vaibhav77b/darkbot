@@ -99,7 +99,7 @@ client.on('messageCreate', async message => {
   const duration = parseInt(args[1]);
 
   if (!target || isNaN(duration)) {
-    return message.reply('Usage: `!debt @user durationInMinutes`');
+    return message.reply('Usage: `!debt @user durationInMinutes..what a dumass`');
   }
 
   const targetId = target.id;
@@ -136,7 +136,7 @@ client.on('messageCreate', async message => {
           await user.save();
 
           try {
-            await target.send('⏰ **Time’s up!** You have been timed out for 1 day for not repaying your debt.');
+            await target.send('⏰ **Time’s up!** Yo ass is been timed out for 1 day for not repaying your debt.');
           } catch {}
         }
         clearInterval(countdown);
@@ -154,7 +154,7 @@ client.on('messageCreate', async message => {
   }
 
   const target = message.mentions.users.first();
-  if (!target) return message.reply('Usage: `!redebt @user`');
+  if (!target) return message.reply('Usage: `!redebt @user `');
 
   const user = await User.findOne({ userId: target.id });
   if (!user || !user.debt?.active) {
