@@ -34,7 +34,6 @@ const userSchema = new mongoose.Schema({
   cooldowns: { type: Object, default: {} },
   infCooldown: { type: Boolean, default: false }
 });
-const User = mongoose.model('User', userSchema);
 
 const shop = require('./shop.json');
 const eggs = require('./eggshop.json');
