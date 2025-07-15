@@ -91,6 +91,110 @@ client.on('messageCreate', async message => {
     await targetUser.save();
     return channel.send(`✅ Gave ${amount} DC to ${target.tag}.`);
   }
+  if (command === 'debt') {
+  if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+    return message.reply('❌ Only admins can use this command.');
+  }
+
+  const target = message.mentions.users.first();
+  const duration = parseInt(args[1]);
+
+  if (!target || isNaN(duration)) {
+    return message.reply('Usage: `!debt @user durationInMinutes`');
+  }
+
+  const targetId = target.id;
+  const targetUser = await User.findOneAndUpdate(
+    { userId: targetId },
+    {
+      $set: {
+        'debt.active': true,
+        'debt.endTime': Date.now() + duration * 60 * 1000,
+        'debt.timeoutSet': false,
+      },
+    },
+    { upsert: true, new: true }
+  );
+
+  try {
+    const dm = await target.send(
+      `💸 You’ve been fined **1T DC**.\nYou must repay within **${duration} minutes**, or you’ll be timed out for 1 day.`
+    );
+
+    const countdown = setInterval(async () => {
+      const user = await User.findOne({ userId: targetId });
+      if (!user?.debt?.active || user.debt.timeoutSet) {
+        clearInterval(countdown);
+        return;
+      }
+
+      if (Date.now() >= user.debt.endTime) {
+        const guild = message.guild;
+        const member = guild.members.cache.get(targetId);
+        if (member) {
+          await member.timeout(24 * 60 * 60 * 1000, 'Failed to repay 1T debt');
+          user.debt.timeoutSet = true;
+          await user.save();
+
+          try {
+            await target.send('⏰ **Time’s up!** You have been timed out for 1 day for not repaying your debt.');
+          } catch {}
+        }
+        clearInterval(countdown);
+      }
+    }, 15000); // check every 15 seconds
+  } catch (err) {
+    console.warn('Failed to send DM:', err);
+  }
+
+  return message.reply(`✅ Debt of 1T DC applied to <@${targetId}> for ${duration} minutes.`);
+}
+  if (command === 'redebt') {
+  if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+    return message.reply('❌ Only admins can use this command.');
+  }
+
+  const target = message.mentions.users.first();
+  if (!target) return message.reply('Usage: `!redebt @user`');
+
+  const user = await User.findOne({ userId: target.id });
+  if (!user || !user.debt?.active) {
+    return message.reply('❌ That user has no active debt.');
+  }
+
+  user.debt = { active: false, endTime: null, timeoutSet: false };
+  await user.save();
+
+  try {
+    await target.send('🆓 Your debt has been cancelled by an admin.');
+  } catch {}
+
+  return message.reply(`✅ Debt for <@${target.id}> has been removed.`);
+}
+  if (command === 'paydebt') {
+  const userId = message.author.id;
+  let user = await User.findOne({ userId });
+
+  if (!user || !user.debt?.active) {
+    return message.reply('❌ You have no active debt.');
+  }
+
+  if (user.dc < 1_000_000_000_000) {
+    return message.reply('❌ You don’t have enough DC to pay your debt (1T DC required).');
+  }
+
+  user.dc -= 1_000_000_000_000;
+  user.debt = {
+    active: false,
+    endTime: null,
+    timeoutSet: false
+  };
+
+  await user.save();
+
+  message.reply('✅ You successfully paid your debt of **1T DC**!');
+  message.author.send('💸 Your debt has been cleared. Thank you for the payment!');
+}
 
   if (command === 'dc') {
     return message.reply(`💰 You have **${user.dc} DC**.`);
