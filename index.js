@@ -296,9 +296,38 @@ client.on('messageCreate', async message => {
       { name: '🛒 Shop', value: '`!shop`, `!buy item`, `!inv`, `!jackpot`' },
       { name: '🥚 Eggs & Pets', value: '`!eggshop`, `!buyegg rarity(for dumbasses like abhi,its common egg)`, `!mypets`' },
       { name: '⚙️ Admin Only', value: '`!givedc`, `!setstock`, `!giveinfcd`, `!removeinfcd`, `!debt`, `!redebt`' },
-      { name: '📜 Other', value: '`!log`' }
+      { name: '📜 Bot Shit for me ', value: '`!log`' }
     )
-    .setFooter({ text: 'Use commands with ! prefix' });
+    .setFooter({ text: 'Use commands with ! at starting bigga' });
+
+  return message.channel.send({ embeds: [embed] });
+}
+  if (command === 'mypets') {
+  const pets = inventory[userId]?.filter(item =>
+    eggs.some(egg => egg.pets.includes(item))
+  );
+
+  if (!pets || pets.length === 0) return message.reply('🐾 You have no pets.');
+
+  const petCounts = pets.reduce((a, b) => {
+    a[b] = (a[b] || 0) + 1;
+    return a;
+  }, {});
+
+  const embed = new EmbedBuilder()
+    .setTitle('🐾 Your Pets')
+    .setColor('Purple');
+
+  for (const [pet, count] of Object.entries(petCounts)) {
+    let description = 'No description.';
+    for (const egg of eggs) {
+      if (egg.pets.includes(pet) && egg.descriptions?.[pet]) {
+        description = egg.descriptions[pet];
+        break;
+      }
+    }
+    embed.addFields({ name: `${pet} x${count}`, value: description });
+  }
 
   return message.channel.send({ embeds: [embed] });
 }
