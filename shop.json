@@ -1,7 +1,7 @@
 {
   "items": [
     {
-      "id": "darkfist",
+      "id": "dark fist",
       "name": "🌑 Dark fist",
       "price": 10000000,
       "stock": 20
@@ -13,55 +13,55 @@
       "stock": 15
     },
     {
-      "id": "darkpulse",
+      "id": "dark pulse",
       "name": "🌑 Dark pulse ",
       "price": 25000000,
       "stock": 9
     },
     {
-      "id": "darkpunches",
+      "id": "dark punches",
       "name": "🌑 Dark punches ",
       "price": 35000000,
       "stock": 5
     },
     {
-      "id": "corruptsmash",
+      "id": "corruption smash",
       "name": "🔯 Corruption smash",
       "price": 50000000,
       "stock": 5
     },
     {
-      "id": "corruptrasengan",
+      "id": "corruption rasengan",
       "name": "🔯 Corruption rasengan",
       "price": 50000000,
       "stock": 10
     },
     {
-      "id": "darkboog",
-      "name": "🔯 Dark booger",
+      "id": "dark booger",
+      "name": "🔯 Dark booger(tf)",
       "price": 55000000,
       "stock": 8
     },
     {
-      "id": "galacticcage",
+      "id": "galactic cage",
       "name": "🔮 Galactic cage",
       "price": 65000000,
       "stock": 6
     },
     {
-      "id": "galaticfist",
+      "id": "galactic fist",
       "name": "🔮 Galactic fist",
       "price": 75000000,
       "stock": 17
     },
     {
-      "id": "chronicleblst",
+      "id": "chronicle blast",
       "name": "🔮 Chronicle blast",
       "price": 75000000,
       "stock": 94
     },
     {
-      "id": "rainpulse",
+      "id": "rainbow pulse",
       "name": "🌈 Rainbow pulse",
       "price": 95000000,
       "stock": 6
