@@ -286,7 +286,7 @@ client.on('messageCreate', async message => {
     const embed = new EmbedBuilder().setTitle('📝 Update Log').setDescription(log).setColor('Orange');
     return channel.send({ embeds: [embed] });
   }
-  if (command === 'help') {
+  if (command === 'dhelp') {
   const embed = new EmbedBuilder()
     .setTitle('🛠️ Bot Commands')
     .setColor('Blurple')
