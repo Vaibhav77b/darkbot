@@ -349,7 +349,7 @@ message.channel.send({ embeds: [embed] });
   // Admin command: restore a user's inventory from backup
   if (command === 'restoreinv') {
     if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator))
-      return message.reply('❌ You need to be an admin to restore inventories.');
+      return message.reply('❌ You need to be an admin to restore inventories..WHO DO YOU THINK YOU R.');
     const targetUserMention = message.mentions.users.first();
     if (!targetUserMention) return message.reply('Usage: !restoreinv @user');
     let invData = {};
@@ -368,7 +368,7 @@ message.channel.send({ embeds: [embed] });
   // Send an embed log (admin-only conceptually)
   if (command === 'log') {
     const logText = args.join(" ");
-    if (!logText) return message.reply('Please include update log.');
+    if (!logText) return message.reply('Please include update log mister.');
     const embed = new EmbedBuilder()
       .setTitle('📝 Update Log')
       .setDescription(logText)
@@ -420,14 +420,27 @@ message.channel.send({ embeds: [embed] });
   }
 
   // Leaderboard (top DC holders)
-  if (command === 'lb' || command === 'leaderboard') {
-    const topUsers = await User.find({}).sort({ dc: -1 }).limit(10);
-    const embed = new EmbedBuilder().setTitle('🏆 Top rich biggas in my class').setColor('Gold');
-    topUsers.forEach((u, i) => {
-      embed.addFields({ name: `${i + 1}. <@${u.userId}>`, value: `${u.dc} DC` });
+if (command === 'lb' || command === 'leaderboard') {
+  const topUsers = await User.find({}).sort({ dc: -1 }).limit(10);
+
+  const embed = new EmbedBuilder()
+    .setTitle('🏆 Top Rich Biggas in My Class')
+    .setColor('Gold');
+
+  for (let i = 0; i < topUsers.length; i++) {
+    const userId = topUsers[i].userId;
+    const user = await client.users.fetch(userId).catch(() => null);
+    const name = user ? user.tag : `<@${userId}>`;
+    const dc = Number(topUsers[i].dc).toLocaleString();
+
+    embed.addFields({
+      name: `${i + 1}. ${name}`,
+      value: `${dc} DC`,
+      inline: false
     });
-    return channel.send({ embeds: [embed] });
   }
-});
+
+  return channel.send({ embeds: [embed] });
+}
 
 client.login(TOKEN);
