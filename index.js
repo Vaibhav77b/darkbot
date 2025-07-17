@@ -262,12 +262,20 @@ client.on('messageCreate', async message => {
 
   // List eggs and their pets
   if (command === 'eggshop') {
-    const embed = new EmbedBuilder().setTitle('🥚 Egg Shop').setColor('Yellow');
-    eggs.forEach((egg, i) => {
-      embed.addFields({ name: `${i + 1}. ${egg.rarity}`, value: egg.pets.join(", ") });
-    });
-    return channel.send({ embeds: [embed] });
-  }
+
+const embed = new EmbedBuilder()
+  .setTitle("🥚 Egg Shop")
+  .setColor("Orange");
+
+eggData.forEach(egg => {
+  embed.addFields({
+    name: egg.rarity,
+    value: egg.pets.map(p => `• ${p}`).join('\n'),
+    inline: false
+  });
+});
+
+message.channel.send({ embeds: [embed] });
 
   // Buy (hatch) an egg for DC (fixed cost 5000)
   if (command === 'buyegg') {
