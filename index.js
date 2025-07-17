@@ -392,6 +392,29 @@ message.channel.send({ embeds: [embed] });
       .setFooter({ text: 'Use commands with ! at the start.' });
     return message.channel.send({ embeds: [embed] });
   }
+    // Leaderboard (top DC holders)
+  if (command === 'lb' || command === 'leaderboard') {
+  const topUsers = await User.find({}).sort({ dc: -1 }).limit(10);
+
+  const embed = new EmbedBuilder()
+    .setTitle('🏆 Top Rich Biggas in My Class')
+    .setColor('Gold');
+
+  for (let i = 0; i < topUsers.length; i++) {
+    const userId = topUsers[i].userId;
+    const user = await client.users.fetch(userId).catch(() => null);
+    const name = user ? user.tag : `<@${userId}>`;
+    const dc = Number(topUsers[i].dc).toLocaleString();
+
+    embed.addFields({
+      name: `${i + 1}. ${name}`,
+      value: `${dc} DC`,
+      inline: false
+    });
+  }
+
+  return channel.send({ embeds: [embed] });
+}
 
   // Show the user's pets (from their inventory)
   if (command === 'mypets') {
@@ -418,29 +441,5 @@ message.channel.send({ embeds: [embed] });
     }
     return channel.send({ embeds: [embed] });
   }
-
-  // Leaderboard (top DC holders)
-if (command === 'lb' || command === 'leaderboard') {
-  const topUsers = await User.find({}).sort({ dc: -1 }).limit(10);
-
-  const embed = new EmbedBuilder()
-    .setTitle('🏆 Top Rich Biggas in My Class')
-    .setColor('Gold');
-
-  for (let i = 0; i < topUsers.length; i++) {
-    const userId = topUsers[i].userId;
-    const user = await client.users.fetch(userId).catch(() => null);
-    const name = user ? user.tag : `<@${userId}>`;
-    const dc = Number(topUsers[i].dc).toLocaleString();
-
-    embed.addFields({
-      name: `${i + 1}. ${name}`,
-      value: `${dc} DC`,
-      inline: false
-    });
-  }
-
-  return channel.send({ embeds: [embed] });
-}
-
+   
 client.login(TOKEN);
