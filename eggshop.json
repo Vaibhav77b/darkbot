@@ -1,84 +1,43 @@
-[
+const eggs = [
   {
-    "rarity": "Common Egg",
-    "emoji": "🥚",
-    "pets": [
-      {
-        "name": "Dark Dog",
-        "description": "Increases punch speed by 0.5x"
-      },
-      {
-        "name": "Dark Cat",
-        "description": "Every 5 mins emits an aura that boosts your speed"
-      }
+    rarity: 'Common Egg',
+    pets: [
+      '🐶 Dark Dog – Increases punch speed by 0.5x',
+      '🐱 Dark Cat – Emits aura every 5 mins that boosts speed'
     ]
   },
   {
-    "rarity": "Uncommon Egg",
-    "emoji": "🐸",
-    "pets": [
-      {
-        "name": "Eclipse Frog",
-        "description": "Slows enemies every 10 mins"
-      },
-      {
-        "name": "Eclipse Butterfly",
-        "description": "Steals 3% DE with 11% double chance"
-      }
+    rarity: 'Uncommon Egg',
+    pets: [
+      '🐸 Eclipse Frog – Slows enemies every 10 mins',
+      '🦋 Eclipse Butterfly – Steals 3% DE with 11% double chance'
     ]
   },
   {
-    "rarity": "Rare Egg",
-    "emoji": "🍬",
-    "pets": [
-      {
-        "name": "Candy Cow",
-        "description": "Boosts punch & speed by 1.5x"
-      },
-      {
-        "name": "Ballistic Bull",
-        "description": "Slows enemies with DE by 0.5x"
-      }
+    rarity: 'Rare Egg',
+    pets: [
+      '🐮 Candy Cow – Boosts punch & speed by 1.5x',
+      '🐃 Ballistic Bull – Slows enemies with DE by 0.5x'
     ]
   },
   {
-    "rarity": "Legendary Egg",
-    "emoji": "🌟",
-    "pets": [
-      {
-        "name": "Carnatic Mouse",
-        "description": "Shields you from getting dined for 1 min"
-      },
-      {
-        "name": "Chill Mammoth",
-        "description": "Reduces pet cooldown by 2 mins"
-      }
+    rarity: 'Legendary Egg',
+    pets: [
+      '🐭 Carnatic Mouse – Shields you from dines for 1 min',
+      '🦣 Chill Mammoth – Reduces pet cooldown by 2 mins'
     ]
   },
   {
-    "rarity": "Mythic Egg",
-    "emoji": "🌀",
-    "pets": [
-      {
-        "name": "Chronicle Monkey",
-        "description": "Copies random pet ability"
-      },
-      {
-        "name": "Chronicle Moth",
-        "description": "Skips benches for 1 min"
-      }
+    rarity: 'Mythic Egg',
+    pets: [
+      '🐵 Chronicle Monkey – Copies a random pet ability',
+      '🦋 Chronicle Moth – Skips benches for 1 min'
     ]
   },
   {
-    "rarity": "Exotic Egg",
-    "emoji": "🐘",
-    "price": 1000000000000,
-    "pets": [
-      {
-        "name": "Reverse Elephant",
-        "description": "A mystical creature that reverses all attacks undefied by any human.(bros him)"
-      }
+    rarity: 'Exotic Egg',
+    pets: [
+      '🐘 Reverse Elephant – Reflects attacks '
     ]
   }
-]
- 
+];
