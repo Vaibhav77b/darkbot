@@ -441,6 +441,4 @@ message.channel.send({ embeds: [embed] });
     }
     return channel.send({ embeds: [embed] });
   }
-  }
-   
 client.login(TOKEN);
