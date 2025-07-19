@@ -445,5 +445,4 @@ message.channel.send({ embeds: [embed] });
 
   return channel.send({ embeds: [embed] });
 } // <--- ✅ THIS IS THE BRACKET YOU'RE MISSING
-
 client.login(TOKEN);
