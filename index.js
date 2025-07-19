@@ -418,28 +418,32 @@ message.channel.send({ embeds: [embed] });
 
   // Show the user's pets (from their inventory)
   if (command === 'mypets') {
-    const pets = user.inventory.filter(item =>
-      eggs.some(egg => egg.pets.includes(item))
-    );
-    if (!pets.length) return message.reply('🐾 You have no pets, cant believe how broken your as is.');
-    const petCounts = pets.reduce((acc, pet) => {
-      acc[pet] = (acc[pet] || 0) + 1;
-      return acc;
-    }, {});
-    const embed = new EmbedBuilder()
-      .setTitle('🐾 Your Pets')
-      .setColor('Purple');
-    for (const [petName, count] of Object.entries(petCounts)) {
-      let description = 'No description.';
-      for (const egg of eggs) {
-        if (egg.pets.includes(petName) && egg.descriptions?.[petName]) {
-          description = egg.descriptions[petName];
-          break;
-        }
+  const pets = user.inventory.filter(item =>
+    eggs.some(egg => egg.pets.includes(item))
+  );
+  if (!pets.length) return message.reply('🐾 You have no pets, cant believe how broken your as is.');
+
+  const petCounts = pets.reduce((acc, pet) => {
+    acc[pet] = (acc[pet] || 0) + 1;
+    return acc;
+  }, {});
+
+  const embed = new EmbedBuilder()
+    .setTitle('🐾 Your Pets')
+    .setColor('Purple');
+
+  for (const [petName, count] of Object.entries(petCounts)) {
+    let description = 'idk its a damn pet.';
+    for (const egg of eggs) {
+      if (egg.pets.includes(petName) && egg.descriptions?.[petName]) {
+        description = egg.descriptions[petName];
+        break;
       }
-      embed.addFields({ name: `${petName} x${count}`, value: description });
     }
-    return channel.send({ embeds: [embed] });
+    embed.addFields({ name: `${petName} x${count}`, value: description });
   }
-}
+
+  return channel.send({ embeds: [embed] });
+} // <--- ✅ THIS IS THE BRACKET YOU'RE MISSING
+
 client.login(TOKEN);
