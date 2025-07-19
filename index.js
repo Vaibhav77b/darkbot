@@ -52,7 +52,7 @@ setInterval(async () => {
         await member.timeout(24 * 60 * 60 * 1000, 'Did not repay debt on time');
         const targetUser = await client.users.fetch(user.userId).catch(() => null);
         if (targetUser) {
-          await targetUser.send("⏳ You failed to repay your **1T DC** debt in time. You’ve been timed out for **1 day** ..YEAH BOI LET'S GO.");
+          await targetUser.send("⏳ You didnt pay **1T DC** debt in time so You’ve been timed out for **1 day** n its not my fault.");
         }
       }
 
@@ -81,7 +81,7 @@ client.on('messageCreate', async message => {
   // Admin command: give DC (coins)
   if (command === 'givedc') {
     if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator))
-      return message.reply('❌ You need to be an admin to use this command.. WHO DO YOU THINK YOU ARE .');
+      return message.reply('❌ You aint a admin lil bro.');
     const target = message.mentions.users.first();
     const amount = parseInt(args[1]);
     if (!target || isNaN(amount)) return message.reply('Usage: !givedc @user amount');
@@ -95,7 +95,7 @@ client.on('messageCreate', async message => {
   // Admin command: apply debt (1T DC, repay in X minutes or timeout)
   if (command === 'debt') {
     if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-      return message.reply('❌ Only admins can use this command.. WHO DO YOU THINK YOU ARE .');
+      return message.reply('❌ you aint a admin lil bro.');
     }
     const target = message.mentions.users.first();
     const duration = parseInt(args[1]);
@@ -150,7 +150,7 @@ client.on('messageCreate', async message => {
   // Admin command: remove debt
   if (command === 'redebt') {
     if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-      return message.reply('❌ Only admins can use this command.. WHO DO YOU THINK YOU ARE .');
+      return message.reply('❌ you aint admin lil bro.');
     }
     const target = message.mentions.users.first();
     if (!target) return message.reply('Usage: `!redebt @user`');
@@ -173,7 +173,7 @@ client.on('messageCreate', async message => {
       return message.reply('❌ You have no active debt.');
     }
     if (usr.dc < 1_000_000_000_000) {
-      return message.reply('❌ You don’t have enough DC to pay your debt (1T DC required).');
+      return message.reply('❌ You don’t have enough DC to pay your debt brokeass.');
     }
     usr.dc -= 1_000_000_000_000;
     usr.debt = { active: false, endTime: null, timeoutSet: false };
@@ -281,9 +281,9 @@ message.channel.send({ embeds: [embed] });
   if (command === 'buyegg') {
     const type = args.join(" ").toLowerCase();
     const egg = eggs.find(e => e.rarity.toLowerCase() === type);
-    if (!egg) return message.reply('❌ Egg not found.');
+    if (!egg) return message.reply('❌ fix your eyes or wear glasses.');
     const cost = 5000;
-    if (user.dc < cost) return message.reply('❌ Not enough DC dumb broke ass.');
+    if (user.dc < cost) return message.reply('❌ not enough DC dumb broke ass.');
     user.dc -= cost;
     const pet = egg.pets[Math.floor(Math.random() * egg.pets.length)];
     user.inventory.push(pet);
@@ -294,7 +294,7 @@ message.channel.send({ embeds: [embed] });
   // Admin command: allow infinite daily for yourself
   if (command === 'giveinfcd') {
     if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator))
-      return message.reply('❌ You need to be an admin to use this command.');
+      return message.reply('❌ You aint a admin lil bro.');
     user.infCooldown = true; // grant infinite daily
     await user.save();
     return message.reply(`♾️ ${message.author.username},you're cooked LMFAO😘😘.`);
@@ -303,7 +303,7 @@ message.channel.send({ embeds: [embed] });
   // Admin command: remove infinite daily (normal cooldown)
   if (command === 'removeinfcd') {
     if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator))
-      return message.reply('❌ You need to be an admin to use this command.');
+      return message.reply('❌ You arent admin just accept it.');
     user.infCooldown = false;
     await user.save();
     return message.reply(`❌ ${message.author.username} ts kid got spared 😂😂😜.`);
@@ -312,7 +312,7 @@ message.channel.send({ embeds: [embed] });
   // Admin command: set stock of a shop item (by id or name)
   if (command === 'setstock') {
     if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator))
-      return message.reply('❌ You need to be an admin to set stock.. WHO DO YOU THINK YOU ARE .');
+      return message.reply('❌ You aint a admin.');
     const itemId = args[0];
     const newStock = parseInt(args[1]);
     if (!itemId || isNaN(newStock))
