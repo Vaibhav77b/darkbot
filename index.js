@@ -49,7 +49,22 @@ setInterval(async () => {
       const member = guild ? await guild.members.fetch(user.userId).catch(() => null) : null;
 
       if (member && !member.isCommunicationDisabled()) {
-        await member.timeout(24 * 60 * 60 * 1000, 'Did not repay debt on time');
+        if (member) {
+  try {
+    if (member.moderatable && !member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+      await member.timeout(86400000, 'Did not repay debt on time');
+      const targetUser = await client.users.fetch(user.userId).catch(() => null);
+      if (targetUser) {
+        await targetUser.send("⏳ You failed to repay your **1T DC** debt in time. You’ve been timed out for **1 day**.");
+      }
+    } else {
+      console.log(`⚠️ Skipped timeout: ${member.user.tag} bruh remove ts niggas admin.`);
+    }
+  } catch (err) {
+    console.error(`❌ Could not timeout ${member.user.tag}:`, err.message);
+  }
+}
+ 
         const targetUser = await client.users.fetch(user.userId).catch(() => null);
         if (targetUser) {
           await targetUser.send("⏳ You didnt pay **1T DC** debt in time so You’ve been timed out for **1 day** n its not my fault.");
