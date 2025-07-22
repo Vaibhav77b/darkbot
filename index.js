@@ -289,23 +289,7 @@ client.on('messageCreate', async message => {
   }
 
   // Admin command: allow infinite daily for yourself
-  if (command === 'giveinfcd') {
-    if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator))
-      return message.reply('❌ You aint a admin lil bro.');
-    user.infCooldown = true; // grant infinite daily
-    await user.save();
-    return message.reply(`♾️ ${message.author.username},you're cooked LMFAO😘😘.`);
-  }
-
-  // Admin command: remove infinite daily (normal cooldown)
-  if (command === 'removeinfcd') {
-    if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator))
-      return message.reply('❌ You arent admin just accept it.');
-    user.infCooldown = false;
-    await user.save();
-    return message.reply(`❌ ${message.author.username} ts kid got spared 😂😂😜.`);
-  }
-
+  
   // Admin command: set stock of a shop item (by id or name)
   if (command === 'setstock') {
     if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator))
