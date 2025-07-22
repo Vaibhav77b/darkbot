@@ -210,10 +210,10 @@ client.on('messageCreate', async message => {
     if (!user.infCooldown && now - last < 86400000) {
       return message.reply('⏳ You already claimed daily DC, no need to overexploit pooks.');
     }
-    user.dc += 1000000;
+    user.dc += 1000000000000;
     user.cooldowns.daily = now;
     await user.save();
-    return message.reply('✅ You claimed **100,000 DC** from daily!');
+    return message.reply('✅ You claimed **100,000,000,000 DC** from daily!');
   }
 
   // List shop items
