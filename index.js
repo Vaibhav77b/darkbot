@@ -287,9 +287,25 @@ client.on('messageCreate', async message => {
     }
     return channel.send({ embeds: [embed] });
   }
+  if (command === 'removeinfcd') {
+  if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) return;
+  const target = message.mentions.users.first();
+  if (!target) return message.reply('❌ Mention a user to unblock.');
+  blockedUsers.delete(target.id);
+  saveBlockedUsers();
+  return message.reply(`✅ ${target.username} is now allowed to use commands.`);
+}
 
   // Admin command: allow infinite daily for yourself
-  
+  if (command === 'giveinfcd') {
+  if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) return;
+  const target = message.mentions.users.first();
+  if (!target) return message.reply('❌ Mention a user to block from using the bot.');
+  blockedUsers.add(target.id);
+  saveBlockedUsers();
+  return message.reply(`🔒 ${target.username} has been blocked from using commands.`);
+}
+
   // Admin command: set stock of a shop item (by id or name)
   if (command === 'setstock') {
     if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator))
