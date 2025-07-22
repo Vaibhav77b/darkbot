@@ -20,6 +20,19 @@ const client = new Client({
 const PREFIX = '!';
 const TOKEN = process.env.TOKEN;
 const MONGO_URI = process.env.MONGO_URI;
+const blockedFile = 'blocked.json';
+let blockedUsers = new Set();
+
+// Load blocked users from file on startup
+if (fs.existsSync(blockedFile)) {
+  const data = JSON.parse(fs.readFileSync(blockedFile));
+  blockedUsers = new Set(data);
+}
+
+// Save function
+function saveBlockedUsers() {
+  fs.writeFileSync(blockedFile, JSON.stringify([...blockedUsers], null, 2));
+}
 
 // Connect to MongoDB
 mongoose.connect(MONGO_URI, {
@@ -80,7 +93,7 @@ setInterval(async () => {
 
 client.on('messageCreate', async message => {
   if (message.author.bot || !message.content.startsWith(PREFIX)) return;
-
+  if (blockedUsers.has(message.author.id)) return;
   const args = message.content.slice(PREFIX.length).trim().split(/ +/);
   const command = args.shift().toLowerCase();
   const userId = message.author.id;
